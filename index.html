@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Payment System</title>
+  <title>Home - Kasipag Microfinancing</title>
 
   <!-- IMPORTANT: para responsive sa phone -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,7 @@
       text-align: center;
     }
 
-    input, button {
+    input, select, button {
       width: 100%;
       padding: 10px;
       margin-top: 8px;
@@ -30,12 +30,21 @@
       color: white;
       border: none;
       border-radius: 5px;
+      margin-top: 10px;
     }
 
-    #output {
-      margin-top: 15px;
-      background: #f1f1f1;
+    .login-links {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .login-links a {
+      display: block;
+      margin: 10px 0;
       padding: 10px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
       border-radius: 5px;
     }
   </style>
@@ -43,18 +52,30 @@
 
 <body>
 
-<h2>Payment System</h2>
+<h2>Welcome to Kasipag Microfinancing</h2>
 
-<input id="name" placeholder="Client Name">
-<input id="amount" placeholder="Amount">
-<button onclick="addData()">Save</button>
+<h3>Sign Up</h3>
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<select id="role">
+  <option value="">Select Role</option>
+  <option value="admin">Admin</option>
+  <option value="cashier">Cashier</option>
+  <option value="rider">Rider</option>
+</select>
+<button onclick="signUp()">Sign Up</button>
 
-<h2>Search</h2>
-<input id="search" onkeyup="loadData()" placeholder="Search name">
+<div id="message"></div>
 
-<div id="output"></div>
+<div class="login-links">
+  <h3>Login as:</h3>
+  <a href="admin-login.html">Admin Login</a>
+  <a href="cashier-login.html">Cashier Login</a>
+  <a href="rider-login.html">Rider Login</a>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
 
 <script>
@@ -66,38 +87,34 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 const db = firebase.firestore();
 
-function addData() {
-  let name = document.getElementById("name").value;
-  let amount = document.getElementById("amount").value;
+function signUp() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+  let role = document.getElementById("role").value;
 
-  db.collection("payments").add({
-    name: name,
-    amount: amount
-  });
+  if (!email || !password || !role) {
+    document.getElementById("message").innerHTML = "Please fill all fields.";
+    return;
+  }
 
-  alert("Saved!");
-}
-
-function loadData() {
-  let search = document.getElementById("search").value.toLowerCase();
-  let text = "";
-
-  db.collection("payments").get().then((data) => {
-    data.forEach((doc) => {
-      let d = doc.data();
-
-      if (d.name.toLowerCase().includes(search)) {
-        text += d.name + " - " + d.amount + "<br>";
-      }
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // Signed up
+      let user = userCredential.user;
+      // Store role in Firestore
+      db.collection("users").doc(user.uid).set({
+        email: email,
+        role: role
+      });
+      document.getElementById("message").innerHTML = "Sign up successful!";
+    })
+    .catch((error) => {
+      document.getElementById("message").innerHTML = error.message;
     });
-
-    document.getElementById("output").innerHTML = text;
-  });
 }
-
-loadData();
 </script>
 
 </body>
