@@ -1,14 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Simple Payment System</title>
+  <title>Payment System</title>
+
+  <!-- IMPORTANT: para responsive sa phone -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      padding: 15px;
+      max-width: 500px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #output {
+      margin-top: 15px;
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
 </head>
+
 <body>
 
-<h2>Add Payment</h2>
+<h2>Payment System</h2>
 
-<input id="name" placeholder="Name"><br><br>
-<input id="amount" placeholder="Amount"><br><br>
+<input id="name" placeholder="Client Name">
+<input id="amount" placeholder="Amount">
 <button onclick="addData()">Save</button>
 
 <h2>Search</h2>
@@ -20,7 +58,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
 
 <script>
-// ILAGAY MO FIREBASE CONFIG MO DITO
+// 🔥 ILAGAY FIREBASE CONFIG MO
 const firebaseConfig = {
   apiKey: "YOUR_KEY",
   authDomain: "YOUR_DOMAIN",
