@@ -7,19 +7,101 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+
+    button {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #ff5252;
+    }
+
+    .form-container {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .form-container input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    .form-container button {
+      width: 100%;
+      margin: 5px 0;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
 
-<h2>Login / Signup</h2>
+<div class="container">
+  <div id="home">
+    <h1>Welcome to Kasipag Microfinancing</h1>
+    <p>Your trusted partner for financial solutions.</p>
+    <button onclick="showForm()">Click to Sign Up / Login</button>
+  </div>
 
-<input type="email" id="email" placeholder="Email"><br><br>
-<input type="password" id="password" placeholder="Password"><br><br>
+  <div class="form-container" id="form">
+    <h2>Login / Signup</h2>
 
-<button onclick="signup()">Sign Up</button>
-<button onclick="login()">Login</button>
-<button onclick="logout()">Logout</button>
+    <input type="email" id="email" placeholder="Email"><br><br>
+    <input type="password" id="password" placeholder="Password"><br><br>
 
-<p id="status"></p>
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="login()">Login</button>
+    <button onclick="logout()">Logout</button>
+
+    <p id="status"></p>
+  </div>
+</div>
 
 <script>
   // 🔥 FIREBASE CONFIG (ginamit mo)
@@ -37,6 +119,12 @@
   firebase.initializeApp(firebaseConfig);
 
   const auth = firebase.auth();
+
+  // Show form function
+  function showForm() {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("form").style.display = "block";
+  }
 
   // 🔐 SIGN UP
   function signup() {
