@@ -1,44 +1,196 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <title>Pro Dashboard UI</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial;
+    }
+
+    body {
+      background: #0f172a;
+      color: white;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #111827;
+      position: fixed;
+      padding: 20px;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: #38bdf8;
+    }
+
+    .menu a {
+      display: block;
+      color: #cbd5e1;
+      padding: 10px;
+      text-decoration: none;
+      margin-bottom: 5px;
+      border-radius: 8px;
+    }
+
+    .menu a:hover {
+      background: #1e293b;
+      color: white;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 220px;
+      padding: 20px;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 12px;
+    }
+
+    .search input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      width: 250px;
+    }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 12px;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      color: #38bdf8;
+    }
+
+    /* IMAGE GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .item {
+      background: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .item img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .item p {
+      padding: 10px;
+    }
+
+    button {
+      background: #ef4444;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
 
-<h1>Welcome Dashboard 🎉</h1>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>⚡ My System</h2>
 
-<p id="user"></p>
+  <div class="menu">
+    <a href="#">Dashboard</a>
+    <a href="#">Users</a>
+    <a href="#">Analytics</a>
+    <a href="#">Settings</a>
+  </div>
+</div>
 
-<button onclick="logout()">Logout</button>
+<!-- MAIN -->
+<div class="main">
 
-<script>
-  // 🔑 PALITAN MO ULIT
-  const supabaseUrl = "https://varktzwttvxijmdcmjzn.supabase.co";
-  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhcmt0end0dHZ4aWptZGNtanpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNTA5NjUsImV4cCI6MjA5MTgyNjk2NX0.sRaIgfFj7Phz7y411mgDxr3BtuY7NaooY6apq6Teck0";
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <h3>Dashboard</h3>
+    <div class="search">
+      <input type="text" placeholder="Search...">
+    </div>
+    <button>Logout</button>
+  </div>
 
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  <!-- CARDS -->
+  <div class="cards">
+    <div class="card">
+      <h3>Users</h3>
+      <p>1,245 active users</p>
+    </div>
 
-  // CHECK USER (PROTECTION)
-  async function checkUser() {
-    const { data } = await supabase.auth.getUser();
+    <div class="card">
+      <h3>Sales</h3>
+      <p>₱25,000 today</p>
+    </div>
 
-    if (!data.user) {
-      window.location.href = "index.html";
-    } else {
-      document.getElementById("user").innerText =
-        "Logged in as: " + data.user.email;
-    }
-  }
+    <div class="card">
+      <h3>Orders</h3>
+      <p>320 new orders</p>
+    </div>
+  </div>
 
-  checkUser();
+  <!-- IMAGE GRID -->
+  <div class="grid">
 
-  // LOGOUT
-  async function logout() {
-    await supabase.auth.signOut();
-    window.location.href = "index.html";
-  }
-</script>
+    <div class="item">
+      <img src="https://source.unsplash.com/400x300/?technology" />
+      <p>Technology Section</p>
+    </div>
+
+    <div class="item">
+      <img src="https://source.unsplash.com/400x300/?business" />
+      <p>Business Section</p>
+    </div>
+
+    <div class="item">
+      <img src="https://source.unsplash.com/400x300/?education" />
+      <p>Education Section</p>
+    </div>
+
+  </div>
+
+</div>
 
 </body>
 </html>
