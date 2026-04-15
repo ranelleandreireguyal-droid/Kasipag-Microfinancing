@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<h1>Welcome Dashboard 🎉</h1>
+
+<p id="user"></p>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+  // 🔑 PALITAN MO ULIT
+  const supabaseUrl = "https://varktzwttvxijmdcmjzn.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhcmt0end0dHZ4aWptZGNtanpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNTA5NjUsImV4cCI6MjA5MTgyNjk2NX0.sRaIgfFj7Phz7y411mgDxr3BtuY7NaooY6apq6Teck0";
+
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  // CHECK USER (PROTECTION)
+  async function checkUser() {
+    const { data } = await supabase.auth.getUser();
+
+    if (!data.user) {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("user").innerText =
+        "Logged in as: " + data.user.email;
+    }
+  }
+
+  checkUser();
+
+  // LOGOUT
+  async function logout() {
+    await supabase.auth.signOut();
+    window.location.href = "index.html";
+  }
+</script>
+
+</body>
+</html>
