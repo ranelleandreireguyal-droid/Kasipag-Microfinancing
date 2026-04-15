@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cashier Login - Kasipag Microfinancing</title>
+
+  <!-- IMPORTANT: para responsive sa phone -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      padding: 15px;
+      max-width: 500px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #message {
+      margin-top: 15px;
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Cashier Login</h2>
+
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="signIn()">Sign In</button>
+
+<div id="message"></div>
+
+<a href="index.html">Back to Home</a>
+
+<script>
+function signIn() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    document.getElementById("message").innerHTML = "Please fill all fields.";
+    return;
+  }
+
+  fetch('http://localhost:3001/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, password })
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("message").innerHTML = data.message;
+  })
+  .catch(error => {
+    document.getElementById("message").innerHTML = "Error: " + error.message;
+  });
+}
+</script>
+
+</body>
+</html>

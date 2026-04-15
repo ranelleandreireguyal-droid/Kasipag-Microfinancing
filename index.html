@@ -1,104 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Home - Kasipag Microfinancing</title>
-
-  <!-- IMPORTANT: para responsive sa phone -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      font-family: Arial;
-      padding: 15px;
-      max-width: 500px;
-      margin: auto;
-    }
-
-    h2 {
-      text-align: center;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-
-    .login-links {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .login-links a {
-      display: block;
-      margin: 10px 0;
-      padding: 10px;
-      background: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-  </style>
+  <title>Login</title>
 </head>
-
 <body>
 
-<h2>Welcome to Kasipag Microfinancing</h2>
+<h2>Login</h2>
 
-<h3>Sign Up</h3>
 <input id="email" type="email" placeholder="Email">
 <input id="password" type="password" placeholder="Password">
-<select id="role">
-  <option value="">Select Role</option>
-  <option value="admin">Admin</option>
-  <option value="cashier">Cashier</option>
-  <option value="rider">Rider</option>
-</select>
-<button onclick="signUp()">Sign Up</button>
+<button onclick="login()">Login</button>
 
-<div id="message"></div>
-
-<div class="login-links">
-  <h3>Login as:</h3>
-  <a href="admin-login.html">Admin Login</a>
-  <a href="cashier-login.html">Cashier Login</a>
-  <a href="rider-login.html">Rider Login</a>
-</div>
+<p id="message"></p>
 
 <script>
-function signUp() {
+const SUPABASE_URL = "https://varktzwttvxijmdcmjzn.supabase.co";
+const SUPABASE_KEY = "YOUR_ANON_KEY_HERE";
+
+async function login() {
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
-  let role = document.getElementById("role").value;
 
-  if (!email || !password || !role) {
-    document.getElementById("message").innerHTML = "Please fill all fields.";
+  // 🔐 LOGIN (Supabase Auth)
+  const res = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (data.error) {
+    document.getElementById("message").innerHTML = data.error.message;
     return;
   }
 
-  fetch('http://localhost:3000/signup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, password, role })
-  })
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById("message").innerHTML = data.message;
-  })
-  .catch(error => {
-    document.getElementById("message").innerHTML = "Error: " + error.message;
-  });
+  // 💾 Save session
+  localStorage.setItem("user", JSON.stringify(data.user));
+
+  // 🔎 GET ROLE FROM DATABASE
+  const roleRes = await fetch(
+    SUPABASE_URL + "/rest/v1/users?email=eq." + email,
+    {
+      headers: {
+        "apikey": SUPABASE_KEY
+      }
+    }
+  );
+
+  const roleData = await roleRes.json();
+
+  if (roleData.length === 0) {
+    document.getElementById("message").innerHTML = "No role found!";
+    return;
+  }
+
+  const role = roleData[0].role;
+
+  // 🚀 REDIRECT BASED SA ROLE
+  if (role === "admin") {
+    window.location.href = "admin.html";
+  } else if (role === "cashier") {
+    window.location.href = "cashier.html";
+  } else if (role === "rider") {
+    window.location.href = "rider.html";
+  }
 }
 </script>
 

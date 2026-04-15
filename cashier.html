@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cashier Dashboard</title>
+</head>
+<body>
+
+<script>
+if (!localStorage.getItem("user")) {
+  window.location.href = "login.html";
+}
+</script>
+
+<h1>Cashier Dashboard</h1>
+<button onclick="logout()">Logout</button>
+
+<script>
+function logout(){
+  localStorage.removeItem("user");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
