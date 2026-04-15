@@ -2,6 +2,13 @@
 <html>
 <head>
   <title>Cashier Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  const supabaseUrl = "https://varktzwttvxijmdcmjzn.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhcmt0end0dHZ4aWptZGNtanpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNTA5NjUsImV4cCI6MjA5MTgyNjk2NX0.sRaIgfFj7Phz7y411mgDxr3BtuY7NaooY6apq6Teck0";
+
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  </script>
 </head>
 <body>
 

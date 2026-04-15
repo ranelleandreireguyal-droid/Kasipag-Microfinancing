@@ -1,74 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
+  <title>Supabase Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<h2>Login</h2>
+<h2>Login System</h2>
 
-<input id="email" type="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
+<input type="email" id="email" placeholder="Email"><br><br>
+<input type="password" id="password" placeholder="Password"><br><br>
+
+<button onclick="signup()">Sign Up</button>
 <button onclick="login()">Login</button>
+<button onclick="logout()">Logout</button>
 
-<p id="message"></p>
+<p id="status"></p>
 
 <script>
-const SUPABASE_URL = "https://varktzwttvxijmdcmjzn.supabase.co";
-const SUPABASE_KEY = "YOUR_ANON_KEY_HERE";
+  // 🔑 Supabase Config (AYOS NA TO)
+  const supabaseUrl = "https://varktzwttvxijmdcmjzn.supabase.co";
 
-async function login() {
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhcmt0end0dHZ4aWptZGNtanpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNTA5NjUsImV4cCI6MjA5MTgyNjk2NX0.sRaIgfFj7Phz7y411mgDxr3BtuY7NaooY6apq6Teck0";
 
-  // 🔐 LOGIN (Supabase Auth)
-  const res = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
-    method: "POST",
-    headers: {
-      "apikey": SUPABASE_KEY,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ email, password })
-  });
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-  const data = await res.json();
+  // 🔥 SIGN UP
+  async function signup() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-  if (data.error) {
-    document.getElementById("message").innerHTML = data.error.message;
-    return;
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password
+    });
+
+    document.getElementById("status").innerText =
+      error ? error.message : "Signup successful! Check your email.";
   }
 
-  // 💾 Save session
-  localStorage.setItem("user", JSON.stringify(data.user));
+  // 🔥 LOGIN
+  async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-  // 🔎 GET ROLE FROM DATABASE
-  const roleRes = await fetch(
-    SUPABASE_URL + "/rest/v1/users?email=eq." + email,
-    {
-      headers: {
-        "apikey": SUPABASE_KEY
-      }
-    }
-  );
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
 
-  const roleData = await roleRes.json();
-
-  if (roleData.length === 0) {
-    document.getElementById("message").innerHTML = "No role found!";
-    return;
+    document.getElementById("status").innerText =
+      error ? error.message : "Login successful! Welcome " + data.user.email;
   }
 
-  const role = roleData[0].role;
-
-  // 🚀 REDIRECT BASED SA ROLE
-  if (role === "admin") {
-    window.location.href = "admin.html";
-  } else if (role === "cashier") {
-    window.location.href = "cashier.html";
-  } else if (role === "rider") {
-    window.location.href = "rider.html";
+  // 🔥 LOGOUT
+  async function logout() {
+    await supabase.auth.signOut();
+    document.getElementById("status").innerText = "Logged out!";
   }
-}
+
 </script>
 
 </body>
