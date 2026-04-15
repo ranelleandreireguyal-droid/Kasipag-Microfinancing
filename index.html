@@ -97,6 +97,14 @@
     <input type="email" id="email" placeholder="Email"><br><br>
     <input type="password" id="password" placeholder="Password"><br><br>
 
+    <label for="role">Select Role:</label><br>
+    <input type="radio" id="admin" name="role" value="admin">
+    <label for="admin">Admin</label><br>
+    <input type="radio" id="cashier" name="role" value="cashier">
+    <label for="cashier">Cashier</label><br>
+    <input type="radio" id="rider" name="role" value="rider">
+    <label for="rider">Rider</label><br><br>
+
     <button onclick="signup()">Sign Up</button>
     <button onclick="login()">Login</button>
     <button onclick="logout()">Logout</button>
@@ -132,9 +140,16 @@
   function signup() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const role = document.querySelector('input[name="role"]:checked');
+
+    if (!role) {
+      document.getElementById("status").innerText = "Please select a role.";
+      return;
+    }
 
     auth.createUserWithEmailAndPassword(email, password)
       .then(() => {
+        localStorage.setItem('role', role.value);
         document.getElementById("status").innerText = "Signup successful!";
       })
       .catch(error => {
@@ -152,8 +167,16 @@
         document.getElementById("status").innerText =
           "Login successful: " + userCredential.user.email;
 
-        // redirect optional
-        // window.location.href = "dashboard.html";
+        const role = localStorage.getItem('role');
+        if (role === 'admin') {
+          window.location.href = "admin.html";
+        } else if (role === 'cashier') {
+          window.location.href = "cashier.html";
+        } else if (role === 'rider') {
+          window.location.href = "rider.html";
+        } else {
+          document.getElementById("status").innerText = "Role not found!";
+        }
       })
       .catch(error => {
         document.getElementById("status").innerText = error.message;
@@ -163,6 +186,7 @@
   // 🚪 LOGOUT
   function logout() {
     auth.signOut();
+    localStorage.removeItem('role');
     document.getElementById("status").innerText = "Logged out!";
   }
 
